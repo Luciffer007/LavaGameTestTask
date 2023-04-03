@@ -3,7 +3,7 @@ using UnityEngine.AI;
 using UnityEngine.InputSystem.EnhancedTouch;
 using ETouch = UnityEngine.InputSystem.EnhancedTouch;
 
-[RequireComponent(typeof(NavMeshAgent), typeof(PlayerAnimator))]
+[RequireComponent(typeof(NavMeshAgent), typeof(PlayerAnimator), typeof(Interactor))]
 public class PlayerTouchMovement : MonoBehaviour
 {
     [SerializeField] 
@@ -16,6 +16,8 @@ public class PlayerTouchMovement : MonoBehaviour
 
     private PlayerAnimator _animator;
 
+    private Interactor _interactor;
+
     private Finger _movementFinger;
 
     private Vector2 _movementDirection;
@@ -24,6 +26,7 @@ public class PlayerTouchMovement : MonoBehaviour
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<PlayerAnimator>();
+        _interactor  = GetComponent<Interactor>();
     }
 
     private void OnEnable()
@@ -54,6 +57,8 @@ public class PlayerTouchMovement : MonoBehaviour
             joystick.gameObject.SetActive(true);
             joystick.RectTransform.sizeDelta = joystickSize;
             joystick.RectTransform.anchoredPosition = ClampStartPosition(touchedFinger.screenPosition);
+
+            _interactor.StopInteraction();
         }
     }
 
@@ -85,6 +90,8 @@ public class PlayerTouchMovement : MonoBehaviour
             
             joystick.Knob.anchoredPosition = Vector2.zero;
             joystick.gameObject.SetActive(false);
+            
+            _interactor.StartInteraction();
         }
     }
     
